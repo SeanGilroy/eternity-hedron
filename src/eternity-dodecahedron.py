@@ -65,7 +65,14 @@ frame_length = 230
 frame_height = 5
 frame_width = 0
 
+underwire_thickness = 1.5
+frame_outer_bottom_thickness = 3 + underwire_thickness
+
+frame_rail_width = 2
+frame_sidewall_height = 12
+
 led_strip_width = 12.2
+led_strip_height = 2.2
 
 
 
@@ -78,6 +85,7 @@ led_strip_width = 12.2
 
 
 phi = ( 1 + sqrt(5) ) / 2
+dihedral_angle_dodecahedron = math.acos(-math.sqrt(5)/5)
 edge_scale = frame_length/(sqrt(5)-1)
 dodecahedron_vertex = []
 dodecahedron_edges = []
@@ -272,7 +280,7 @@ bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False, align='WORLD', loc
 bpy.ops.transform.resize(value=(1, 1, 10), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, True, True), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 
 #Rail that connects to Outer Frame
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 1+2*frame_thickness+acrylic_thickness), scale=(frame_length + 4.5*tan(face_angle-pi/2), 1, 6))
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 1+2*frame_thickness+acrylic_thickness), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_rail_width, 6))
 bpy.ops.transform.rotate(value=-0.553575, orient_axis='X', orient_type='GLOBAL', orient_matrix=((4.93038e-32, 1, 2.22045e-16), (2.22045e-16, 4.93038e-32, 1), (1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
@@ -333,7 +341,6 @@ bpy.data.objects['Cube.004'].select_set(True)
 bpy.data.objects['Cube.005'].select_set(True)
 bpy.ops.object.delete(use_global=False)
 
-#print(xyz)
 
 
 ######################
@@ -417,53 +424,28 @@ bpy.ops.object.modifier_apply(modifier="Solidify")
 
 
 ########################
-## Outside Placement  ##
+## frame.outside Creation   
+##     - This is the outside superstructure that will join the acrilic sheets and also house the LEDs
+##     - The orgin point is inline with the top of the LED strip
 ########################
 
-# Figure Out
+# Vertex Chamfer
 bpy.ops.mesh.primitive_cube_add(size=40, enter_editmode=False, align='WORLD', location=(20, 0, 0), scale=(1, 1, 1))
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 bpy.ops.transform.translate(value=((frame_length+1.3)/2, 0, 4+3/2), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 bpy.ops.transform.rotate(value=-0.3648610801294146, orient_axis='Y', orient_type='GLOBAL', orient_matrix=((0.99961, -0.0279216, 3.85335e-08), (0.00136394, 0.0488314, 0.998806), (-0.0278883, -0.998417, 0.0488505)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 
+bpy.context.object.name = "frame.outside.vertex_chamfer"
 bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "orient_type":'GLOBAL', "orient_matrix":((0, 0, 0), (0, 0, 0), (0, 0, 0)), "orient_matrix_type":'GLOBAL', "constraint_axis":(False, False, False), "mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "use_proportional_connected":False, "use_proportional_projected":False, "snap":False, "snap_elements":{'INCREMENT'}, "use_snap_project":False, "snap_target":'CLOSEST', "use_snap_self":True, "use_snap_edit":True, "use_snap_nonedit":True, "use_snap_selectable":False, "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "use_duplicated_keyframes":False, "view2d_edge_pan":False, "release_confirm":False, "use_accurate":False, "use_automerge_and_split":False})
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
 
 
-# Frame Groove Sidewalls
 
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 2, -4), scale=(frame_length+1.3, 4, 8))
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-bpy.ops.transform.translate(value=(0, ((led_strip_width + 8.2)/2-4), 4-3/2), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
-bpy.ops.transform.rotate(value=-0.07, orient_axis='X', orient_type='GLOBAL', orient_matrix=((4.93038e-32, -1, -2.22045e-16), (-2.22045e-16, 4.93038e-32, 1), (-1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
-bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "orient_type":'GLOBAL', "orient_matrix":((0, 0, 0), (0, 0, 0), (0, 0, 0)), "orient_matrix_type":'GLOBAL', "constraint_axis":(False, False, False), "mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "use_proportional_connected":False, "use_proportional_projected":False, "snap":False, "snap_elements":{'INCREMENT'}, "use_snap_project":False, "snap_target":'CLOSEST', "use_snap_self":True, "use_snap_edit":True, "use_snap_nonedit":True, "use_snap_selectable":False, "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "use_duplicated_keyframes":False, "view2d_edge_pan":False, "release_confirm":False, "use_accurate":False, "use_automerge_and_split":False})
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
-
-
-# Frame Groove Sidewall Champher
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 5, -12.4), scale=(frame_length+1.3, 20, 20))
-bpy.ops.transform.rotate(value=-1.017221521293595, orient_axis='X', orient_type='GLOBAL', orient_matrix=((4.93038e-32, -1, -2.22045e-16), (-2.22045e-16, 4.93038e-32, 1), (-1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
-bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "orient_type":'GLOBAL', "orient_matrix":((0, 0, 0), (0, 0, 0), (0, 0, 0)), "orient_matrix_type":'GLOBAL', "constraint_axis":(False, False, False), "mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "use_proportional_connected":False, "use_proportional_projected":False, "snap":False, "snap_elements":{'INCREMENT'}, "use_snap_project":False, "snap_target":'CLOSEST', "use_snap_self":True, "use_snap_edit":True, "use_snap_nonedit":True, "use_snap_selectable":False, "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "use_duplicated_keyframes":False, "view2d_edge_pan":False, "release_confirm":False, "use_accurate":False, "use_automerge_and_split":False})
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
-
-# Frame Groove Channel
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, led_strip_width/2+3-1.2/2, -1.3), scale=(frame_length+1.3, 1.2, 10))
-
-bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "orient_type":'GLOBAL', "orient_matrix":((0, 0, 0), (0, 0, 0), (0, 0, 0)), "orient_matrix_type":'GLOBAL', "constraint_axis":(False, False, False), "mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "use_proportional_connected":False, "use_proportional_projected":False, "snap":False, "snap_elements":{'INCREMENT'}, "use_snap_project":False, "snap_target":'CLOSEST', "use_snap_self":True, "use_snap_edit":True, "use_snap_nonedit":True, "use_snap_selectable":False, "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "use_duplicated_keyframes":False, "view2d_edge_pan":False, "release_confirm":False, "use_accurate":False, "use_automerge_and_split":False})
-bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
-
-
-# Wire Channel Under Strip
-underwire_thickness = 1.5
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 2.5 - .5 + underwire_thickness), scale=(frame_length+1.3, 2*underwire_thickness, 2*underwire_thickness))
 
 
 # End Caps
-bpy.ops.mesh.primitive_circle_add(vertices=3, radius=(led_strip_width + 8.2)/sqrt(3)-0.01, enter_editmode=False, align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0.523599), scale=(1, 1, 1))
+bpy.ops.mesh.primitive_circle_add(vertices=3, radius=(led_strip_width + 6*frame_rail_width)/sqrt(3)-0.01, enter_editmode=False, align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0.523599), scale=(1, 1, 1))
 bpy.ops.object.mode_set(mode = 'EDIT')
 bpy.ops.mesh.edge_face_add()
 bpy.ops.transform.resize(value=(1/3, 1, 1), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, True, True), mirror=True, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
@@ -473,6 +455,7 @@ bpy.ops.object.mode_set(mode = 'OBJECT')
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 bpy.ops.transform.translate(value=((frame_length+1.3)/2-0.01, 0, 4+3/2+underwire_thickness), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 
+
 # NOTE: Angle is half the icosohedron dihedral angle
 bpy.ops.transform.rotate(value=-0.3648610801294146, orient_axis='Y', orient_type='GLOBAL', orient_matrix=((0.99961, -0.0279216, 3.85335e-08), (0.00136394, 0.0488314, 0.998806), (-0.0278883, -0.998417, 0.0488505)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 
@@ -480,93 +463,122 @@ bpy.ops.object.modifier_add(type='SOLIDIFY')
 bpy.context.object.modifiers["Solidify"].thickness = 3/cos(-0.3648610801294146)-0.01
 bpy.ops.object.modifier_apply(modifier="Solidify")
 
-
+bpy.context.object.name = "frame.outside.endcap"
 bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "orient_type":'GLOBAL', "orient_matrix":((0, 0, 0), (0, 0, 0), (0, 0, 0)), "orient_matrix_type":'GLOBAL', "constraint_axis":(False, False, False), "mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "use_proportional_connected":False, "use_proportional_projected":False, "snap":False, "snap_elements":{'INCREMENT'}, "use_snap_project":False, "snap_target":'CLOSEST', "use_snap_self":True, "use_snap_edit":True, "use_snap_nonedit":True, "use_snap_selectable":False, "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "use_duplicated_keyframes":False, "view2d_edge_pan":False, "release_confirm":False, "use_accurate":False, "use_automerge_and_split":False})
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
 
 
-# Main Outer Piece
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 4+underwire_thickness/2), scale=(frame_length+1.3, led_strip_width + 8.2, 3+underwire_thickness))
+# Frame Groove Sidewall chamfer
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 10, -10), scale=(frame_length+1.3, 20, 20))
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.ops.transform.rotate(value=pi/2-dihedral_angle_dodecahedron/2, orient_axis='X', orient_type='VIEW', orient_matrix=((4.93038e-32, 1, 2.22045e-16), (2.22045e-16, 4.93038e-32, 1), (1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+bpy.ops.transform.translate(value=(0, sin(pi/2-dihedral_angle_dodecahedron/2)*(acrylic_thickness+acrylic_tolerance+frame_thickness), cos(pi/2-dihedral_angle_dodecahedron/2)*(acrylic_thickness+acrylic_tolerance+frame_thickness)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, False, True), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.context.object.name = "frame.outside.chamfer"
+
+
+# Sidewalls that constrain the frame rails
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, (-3*frame_rail_width + led_strip_width + 6*frame_rail_width)/2 , -frame_sidewall_height/2 + led_strip_height + frame_outer_bottom_thickness), scale=(frame_length+1.3, 3*frame_rail_width, frame_sidewall_height))
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.context.object.name = "frame.outside.sidewall"
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.chamfer"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+
+
+# Connection Rail Negative for frame.inner
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, led_strip_width/2+ 3*(frame_rail_width + 0.2)/2, -10/2 + led_strip_height + frame_outer_bottom_thickness/3), scale=(frame_length+1.3, frame_rail_width + 0.2, 10))
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.context.object.name = "frame.outside.rail_channel"
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+
+
+
+
+# Wire Channel Under LED Strip
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 2.5 - .5 + underwire_thickness), scale=(frame_length+1.3, 2*underwire_thickness, 2*underwire_thickness))
+bpy.context.object.name = "frame.outside.wire_channel"
+
+
+# Primary Body for frame.outside
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, frame_outer_bottom_thickness/2 + led_strip_height), scale=(frame_length+1.3, led_strip_width + 6*frame_rail_width, frame_outer_bottom_thickness))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-bpy.context.object.name = "outside"
+bpy.context.object.name = "frame.outside"
 
 
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.002"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.sidewall"]
 bpy.context.object.modifiers["Boolean"].operation = 'UNION'
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.003"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.sidewall.001"]
 bpy.context.object.modifiers["Boolean"].operation = 'UNION'
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.001"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.001"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Circle"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.endcap"]
 bpy.context.object.modifiers["Boolean"].operation = 'UNION'
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Circle.001"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.endcap.001"]
 bpy.context.object.modifiers["Boolean"].operation = 'UNION'
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.004"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.rail_channel"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.005"]
-bpy.ops.object.modifier_apply(modifier="Boolean")
-
-
-
-bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.006"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.rail_channel.001"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.007"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.wire_channel"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
-
-bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.008"]
-bpy.ops.object.modifier_apply(modifier="Boolean")
-
-
-
 
 
 
 
 bpy.ops.object.select_all(action='DESELECT')
 
-bpy.context.view_layer.objects.active = bpy.data.objects['Cube']
-bpy.data.objects['Cube'].select_set(True)
-bpy.data.objects['Cube.001'].select_set(True)
-bpy.data.objects['Cube.002'].select_set(True)
-bpy.data.objects['Cube.003'].select_set(True)
-bpy.data.objects['Cube.004'].select_set(True)
-bpy.data.objects['Cube.005'].select_set(True)
-bpy.data.objects['Cube.006'].select_set(True)
-bpy.data.objects['Cube.007'].select_set(True)
-bpy.data.objects['Cube.008'].select_set(True)
-bpy.data.objects['Circle'].select_set(True)
-bpy.data.objects['Circle.001'].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects['frame.outside.vertex_chamfer']
+bpy.data.objects['frame.outside.vertex_chamfer'].select_set(True)
+bpy.data.objects['frame.outside.vertex_chamfer.001'].select_set(True)
+bpy.data.objects['frame.outside.sidewall'].select_set(True)
+bpy.data.objects['frame.outside.sidewall.001'].select_set(True)
+bpy.data.objects['frame.outside.chamfer'].select_set(True)
+bpy.data.objects['frame.outside.rail_channel'].select_set(True)
+bpy.data.objects['frame.outside.rail_channel.001'].select_set(True)
+bpy.data.objects['frame.outside.wire_channel'].select_set(True)
+bpy.data.objects['frame.outside.endcap'].select_set(True)
+bpy.data.objects['frame.outside.endcap.001'].select_set(True)
 bpy.ops.object.delete(use_global=False)
 
+
+
+##############################
+## frame.outside Placement  ##
+##############################
 
 
 bpy.context.view_layer.objects.active = bpy.data.objects['Dodecahedron_LED']
@@ -593,7 +605,7 @@ bpy.ops.object.mode_set(mode = 'OBJECT')
 
 for frame in edge_piece_locations:    
         
-    bpy.ops.object.add_named(name = "outside")
+    bpy.ops.object.add_named(name = "frame.outside")
     bpy.ops.transform.translate(value=frame[0], orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
     
     bpy.data.collections['OUTER'].objects.link(bpy.context.selected_objects[-1])
