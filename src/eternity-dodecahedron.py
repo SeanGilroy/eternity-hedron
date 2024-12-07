@@ -60,9 +60,9 @@ start_time = time.time()
 acrylic_thickness = 2.8
 acrylic_tolerance = 0.05
 
-frame_thickness = 1
+frame_thickness = 1.5
 frame_length = 230
-frame_height = 5
+frame_height = 10
 frame_width = 0
 
 underwire_thickness = 1.5
@@ -73,6 +73,7 @@ frame_sidewall_height = 12
 
 led_strip_width = 12.2
 led_strip_height = 2.2
+led_acrylic_gap = 5
 
 
 
@@ -230,7 +231,7 @@ print("face angle", face_angle)
 for face in grid_mesh.faces:
     face.select = True
 
-    bpy.ops.mesh.inset(thickness=2*frame_thickness+acrylic_thickness+1.5/sin(face_angle/2), use_select_inset=True)
+    bpy.ops.mesh.inset(thickness=led_acrylic_gap/(2*sin(dihedral_angle_dodecahedron/2)) + frame_thickness+ frame_thickness/(tan(dihedral_angle_dodecahedron/2)), use_select_inset=True)
     bpy.ops.mesh.delete(type='FACE')
     
     last_vert = []
