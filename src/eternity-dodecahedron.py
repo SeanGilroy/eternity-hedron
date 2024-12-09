@@ -265,25 +265,47 @@ print("frame length", frame_length)
 bpy.ops.object.mode_set(mode = 'OBJECT')
 
 
-######################
-## Frame Creation   ##
-######################
+#############################
+## frame.inside Creation   ##
+#############################
 
 
 # Inside Lip Negative
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 5/2+2, -5/2+acrylic_thickness/2), scale=(frame_length + 4.5*tan(face_angle-pi/2), 5, 5))
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_height-frame_thickness/2, -frame_thickness/2), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_height, 2*frame_thickness))
 
-# Glass Negative
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 5/2, acrylic_thickness/2), scale=(frame_length + 4.5*tan(face_angle-pi/2), 5, acrylic_thickness+acrylic_tolerance))
+# Acrylic Negative
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_height/2, acrylic_thickness/2), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_height, acrylic_thickness+acrylic_tolerance))
 
 # Flat Bottom 
-bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False, align='WORLD', location=(0, -2, 0), scale=(frame_length + 4.5*tan(face_angle-pi/2)+2, 1, 1))
-bpy.ops.transform.resize(value=(1, 1, 10), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, True, True), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, -3*frame_thickness/2, 3*frame_thickness+acrylic_thickness), scale=(frame_length + 4.5*tan(face_angle-pi/2)+2, frame_thickness, 2*frame_thickness+2*acrylic_thickness))
 
 #Rail that connects to Outer Frame
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 1+2*frame_thickness+acrylic_thickness), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_rail_width, 6))
-bpy.ops.transform.rotate(value=-0.553575, orient_axis='X', orient_type='GLOBAL', orient_matrix=((4.93038e-32, 1, 2.22045e-16), (2.22045e-16, 4.93038e-32, 1), (1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+#bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 1+2*frame_thickness+acrylic_thickness), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_rail_width, 6))
+'''
+'''
 
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_rail_width/2, -3), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_rail_width, 6))
+
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+bpy.ops.transform.rotate(value=-0.553575, orient_axis='X', orient_type='GLOBAL', orient_matrix=((4.93038e-32, 1, 2.22045e-16), (2.22045e-16, 4.93038e-32, 1), (1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+#bpy.ops.transform.translate(value=(0, -frame_thickness, -frame_thickness))
+#bpy.ops.transform.translate(value=(0, -led_acrylic_gap/(2*cos(dihedral_angle_dodecahedron/2)), 0))
+#bpy.ops.transform.translate(value=(0, -led_acrylic_gap/(2*cos(dihedral_angle_dodecahedron/2)), -led_acrylic_gap/(2*sin(dihedral_angle_dodecahedron/2))))
+
+
+
+XXX = led_acrylic_gap/(2*sin(dihedral_angle_dodecahedron/2)) + frame_thickness + frame_thickness/(tan(dihedral_angle_dodecahedron/2))
+#bpy.ops.transform.translate(value=(0, -XXX*sin(dihedral_angle_dodecahedron/2)*(sin(dihedral_angle_dodecahedron/2)), -XXX*sin(dihedral_angle_dodecahedron/2)*(cos(dihedral_angle_dodecahedron/2))))
+bpy.ops.transform.translate(value=(0, -XXX, 0))
+
+YYY = led_strip_width/2+ frame_rail_width + 3*(0.2)/2
+bpy.ops.transform.translate(value=(0, YYY*sin(dihedral_angle_dodecahedron/2), YYY*cos(dihedral_angle_dodecahedron/2)))
+
+ZZZ = led_strip_height + frame_outer_bottom_thickness/3 -0.2
+bpy.ops.transform.translate(value=(0, -ZZZ*cos(dihedral_angle_dodecahedron/2), ZZZ*sin(dihedral_angle_dodecahedron/2)))
+
+'''
+'''
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.002"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
@@ -304,8 +326,14 @@ bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 
 # Main Inner Frame Piece
 bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_height/2 - frame_thickness, (2*frame_thickness+acrylic_thickness)/2-frame_thickness), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_height, 2*frame_thickness+acrylic_thickness))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-bpy.context.object.name = "frame"
+bpy.context.object.name = "frame.inside"
 
+#print(xyz)
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.003"]
+bpy.context.object.modifiers["Boolean"].operation = 'UNION'
+bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube"]
@@ -316,18 +344,12 @@ bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.001"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.003"]
-bpy.context.object.modifiers["Boolean"].operation = 'UNION'
-bpy.ops.object.modifier_apply(modifier="Boolean")
-
-bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.004"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Cube.005"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
-
 
 
 
@@ -351,7 +373,7 @@ bpy.ops.object.delete(use_global=False)
 
 for frame in edge_piece_locations:    
         
-    bpy.ops.object.add_named(name = "frame")
+    bpy.ops.object.add_named(name = "frame.inside")
     bpy.ops.transform.translate(value=frame[0], orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
     
     bpy.data.collections['FRAME'].objects.link(bpy.context.selected_objects[-1])
