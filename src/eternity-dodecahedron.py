@@ -56,12 +56,16 @@ start_time = time.time()
 ######################
 ##  Parameters ##
 ######################
+phi = ( 1 + sqrt(5) ) / 2
+dihedral_angle_dodecahedron = math.acos(-math.sqrt(5)/5)
 
 acrylic_thickness = 2.8
 acrylic_tolerance = 0.05
+LED_per_meter = 144/1000
+LED_per_side = 17
+LED_length = LED_per_side/LED_per_meter
 
 frame_thickness = 1.5
-frame_length = 230
 frame_height = 10
 frame_width = 0
 
@@ -75,6 +79,9 @@ led_strip_width = 12.2
 led_strip_height = 2.2
 led_acrylic_gap = 5
 
+XXX = led_acrylic_gap/(2*sin(dihedral_angle_dodecahedron/2)) + frame_thickness + frame_thickness/(tan(dihedral_angle_dodecahedron/2))
+
+frame_length = LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10)))
 
 
 
@@ -85,12 +92,13 @@ led_acrylic_gap = 5
 
 
 
-phi = ( 1 + sqrt(5) ) / 2
-dihedral_angle_dodecahedron = math.acos(-math.sqrt(5)/5)
+
 edge_scale = frame_length/(sqrt(5)-1)
 dodecahedron_vertex = []
 dodecahedron_edges = []
 dodecahedron_faces = []
+
+
 
 
 # Generate dodecahedron verticies
@@ -141,6 +149,7 @@ frame_mesh.from_pydata(dodecahedron_vertex, dodecahedron_edges, dodecahedron_fac
 frame_mesh.validate()
 frame_mesh.update()
 
+
 bpy.context.collection.objects.link(bpy.data.objects.new("Dodecahedron_LED", frame_mesh))
 
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
@@ -150,6 +159,8 @@ bpy.context.view_layer.objects.active = bpy.data.objects['Dodecahedron_LED']
 bpy.data.objects['Dodecahedron_LED'].select_set(True)
 
 
+#bpy.ops.transform.resize(value=(phi/2, phi/2, phi/2), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
 
 
@@ -225,7 +236,7 @@ grid_mesh = bmesh.from_edit_mesh(bpy.context.object.data)
 grid_mesh.faces.ensure_lookup_table()
 face_angle = grid_mesh.faces[0].edges[0].calc_face_angle()
 face_angle=108*pi/180
-print("face angle", face_angle)
+#print("face angle", face_angle)
 
 
 for face in grid_mesh.faces:
