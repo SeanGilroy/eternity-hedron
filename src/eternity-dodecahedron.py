@@ -449,15 +449,35 @@ bpy.ops.object.modifier_apply(modifier="Solidify")
 # Vertex Chamfer
 bpy.ops.mesh.primitive_cube_add(size=40, enter_editmode=False, align='WORLD', location=(20, 0, 0), scale=(1, 1, 1))
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-bpy.ops.transform.translate(value=((frame_length+1.3)/2, 0, 4+3/2), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
-bpy.ops.transform.rotate(value=-0.3648610801294146, orient_axis='Y', orient_type='GLOBAL', orient_matrix=((0.99961, -0.0279216, 3.85335e-08), (0.00136394, 0.0488314, 0.998806), (-0.0278883, -0.998417, 0.0488505)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+bpy.ops.transform.translate(value=(0, 0, frame_outer_bottom_thickness + led_strip_height))
 
-bpy.context.object.name = "frame.outside.vertex_chamfer"
+# Angle is pentagon angle /6 (180*3 /5 /6 = 18 deg)
+bpy.ops.transform.rotate(value=pi/10, orient_axis='Y', orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+
+
+# Angle from here:  https://math.stackexchange.com/questions/4605339/dodecahedron-angle-between-edge-and-face
+bpy.ops.transform.rotate(value=acos(sqrt((5-sqrt(5))/10)) - pi/2, orient_axis='Z', orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, False, True), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+
+bpy.ops.transform.translate(value=(0.5*(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10)))), 0, 0))
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+
+bpy.context.object.name = "frame.outside.vertex_chamfer.001"
+
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
+#bpy.ops.transform.translate(value=((frame_length+1.3)/2, 0, 4+3/2), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=True, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+#bpy.ops.transform.rotate(value=-0.3648610801294146, orient_axis='Y', orient_type='GLOBAL', orient_matrix=((0.99961, -0.0279216, 3.85335e-08), (0.00136394, 0.0488314, 0.998806), (-0.0278883, -0.998417, 0.0488505)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+
+
+'''
 bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "orient_type":'GLOBAL', "orient_matrix":((0, 0, 0), (0, 0, 0), (0, 0, 0)), "orient_matrix_type":'GLOBAL', "constraint_axis":(False, False, False), "mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "use_proportional_connected":False, "use_proportional_projected":False, "snap":False, "snap_elements":{'INCREMENT'}, "use_snap_project":False, "snap_target":'CLOSEST', "use_snap_self":True, "use_snap_edit":True, "use_snap_nonedit":True, "use_snap_selectable":False, "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "use_duplicated_keyframes":False, "view2d_edge_pan":False, "release_confirm":False, "use_accurate":False, "use_automerge_and_split":False})
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
-
-
+'''
 
 
 
@@ -496,7 +516,7 @@ bpy.context.object.name = "frame.outside.chamfer"
 
 
 # Sidewalls that constrain the frame rails
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, (-3*frame_rail_width + led_strip_width + 6*frame_rail_width)/2 , -frame_sidewall_height/2 + led_strip_height + frame_outer_bottom_thickness), scale=(frame_length+1.3, 3*frame_rail_width, frame_sidewall_height))
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, (-3*frame_rail_width + led_strip_width + 6*frame_rail_width)/2 , -frame_sidewall_height/2 + led_strip_height + frame_outer_bottom_thickness), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), 3*frame_rail_width, frame_sidewall_height))
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 bpy.context.object.name = "frame.outside.sidewall"
 
@@ -520,14 +540,16 @@ bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 
 
 
 # Wire Channel Under LED Strip
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 2.5 - .5 + underwire_thickness), scale=(frame_length+1.3, 2*underwire_thickness, 2*underwire_thickness))
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 2.5 - .5 + underwire_thickness), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), 2*underwire_thickness, 2*underwire_thickness))
 bpy.context.object.name = "frame.outside.wire_channel"
 
-
 # Primary Body for frame.outside
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, frame_outer_bottom_thickness/2 + led_strip_height), scale=(frame_length+1.3, led_strip_width + 6*frame_rail_width, frame_outer_bottom_thickness))
+#not sure if the angle is correct below.  using icosohedron dihedral angle (dual shape of dodecahedron)
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, frame_outer_bottom_thickness/2 + led_strip_height), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), led_strip_width + 6*frame_rail_width, frame_outer_bottom_thickness))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 bpy.context.object.name = "frame.outside"
+print(tan(pi/5)*(frame_outer_bottom_thickness + led_strip_height))
+
 
 
 
@@ -542,11 +564,19 @@ bpy.context.object.modifiers["Boolean"].operation = 'UNION'
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.001"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
-bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.001"]
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.002"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.003"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.004"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 '''
@@ -574,13 +604,13 @@ bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 
-
-
 bpy.ops.object.select_all(action='DESELECT')
 
-bpy.context.view_layer.objects.active = bpy.data.objects['frame.outside.vertex_chamfer']
-bpy.data.objects['frame.outside.vertex_chamfer'].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects['frame.outside.vertex_chamfer.001']
 bpy.data.objects['frame.outside.vertex_chamfer.001'].select_set(True)
+bpy.data.objects['frame.outside.vertex_chamfer.002'].select_set(True)
+bpy.data.objects['frame.outside.vertex_chamfer.003'].select_set(True)
+bpy.data.objects['frame.outside.vertex_chamfer.004'].select_set(True)
 bpy.data.objects['frame.outside.sidewall'].select_set(True)
 bpy.data.objects['frame.outside.sidewall.001'].select_set(True)
 bpy.data.objects['frame.outside.chamfer'].select_set(True)
