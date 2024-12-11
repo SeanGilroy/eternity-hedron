@@ -60,7 +60,7 @@ phi = ( 1 + sqrt(5) ) / 2
 dihedral_angle_dodecahedron = math.acos(-math.sqrt(5)/5)
 
 acrylic_thickness = 2.8
-acrylic_tolerance = 0.05
+acrylic_tolerance = 0.2
 LED_per_meter = 144/1000
 LED_per_side = 17
 LED_length = LED_per_side/LED_per_meter
@@ -543,12 +543,59 @@ bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 
 bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 2.5 - .5 + underwire_thickness), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), 2*underwire_thickness, 2*underwire_thickness))
 bpy.context.object.name = "frame.outside.wire_channel"
 
+
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_height/2, (2*frame_thickness+acrylic_thickness)/2-acrylic_tolerance), scale=(frame_length + 3*frame_thickness*tan(pi/5), frame_height, 2*frame_thickness+acrylic_thickness))
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+bpy.ops.transform.translate(value=(0, led_acrylic_gap/2, -led_acrylic_gap*tan(dihedral_angle_dodecahedron/2)/2+frame_thickness/(tan(dihedral_angle_dodecahedron/2))))
+bpy.ops.transform.rotate(value=pi/2-dihedral_angle_dodecahedron/2, orient_axis='X')
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.context.object.name = "diffuser.groove_negative.001"
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+
+
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, -3.2), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), led_strip_width , 1))
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+bpy.context.object.name = "diffuser"
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.groove_negative.001"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.groove_negative.002"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.001"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.002"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.003"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.vertex_chamfer.004"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+
+
+
+
+
+
+
+
 # Primary Body for frame.outside
 #not sure if the angle is correct below.  using icosohedron dihedral angle (dual shape of dodecahedron)
 bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, frame_outer_bottom_thickness/2 + led_strip_height), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), led_strip_width + 6*frame_rail_width, frame_outer_bottom_thickness))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 bpy.context.object.name = "frame.outside"
-print(tan(pi/5)*(frame_outer_bottom_thickness + led_strip_height))
+
 
 
 
@@ -601,6 +648,19 @@ bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.wire_channel"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+
+
+
+#############
+#  Diffuser ?
+############
+
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser"]
+bpy.context.object.modifiers["Boolean"].operation = 'UNION'
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 
