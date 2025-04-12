@@ -291,7 +291,7 @@ bpy.context.object.name = "frame.inside.acrylic_negative"
 
 #Rail that connects to Outer Frame
 
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_rail_width/2, -3), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_rail_width, 6))
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_rail_width/2, -3), scale=(frame_length + 4.5*tan(face_angle-pi/2), frame_rail_width-.2, 6))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 bpy.ops.transform.rotate(value=-0.553575, orient_axis='X', orient_type='GLOBAL', orient_matrix=((4.93038e-32, 1, 2.22045e-16), (2.22045e-16, 4.93038e-32, 1), (1, 2.22045e-16, 4.93038e-32)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
 
@@ -462,7 +462,6 @@ bpy.ops.transform.translate(value=(0.5*(2*tan(0.3648610801294146)*(frame_outer_b
 bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
 bpy.context.object.name = "frame.outside.vertex_chamfer.001"
-
 bpy.ops.object.duplicate()
 bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
 bpy.ops.object.duplicate()
@@ -544,7 +543,7 @@ bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', loc
 bpy.context.object.name = "frame.outside.wire_channel"
 
 
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_height/2, (2*frame_thickness+acrylic_thickness)/2-acrylic_tolerance), scale=(frame_length + 3*frame_thickness*tan(pi/5), frame_height, 2*frame_thickness+acrylic_thickness))
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, frame_height/2, (2*frame_thickness+acrylic_thickness)/2-acrylic_tolerance), scale=(frame_length + 5*frame_thickness*tan(pi/5), frame_height, 2*frame_thickness+acrylic_thickness))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 bpy.ops.transform.translate(value=(0, led_acrylic_gap/2, -led_acrylic_gap*tan(dihedral_angle_dodecahedron/2)/2+frame_thickness/(tan(dihedral_angle_dodecahedron/2))))
 bpy.ops.transform.rotate(value=pi/2-dihedral_angle_dodecahedron/2, orient_axis='X')
@@ -553,10 +552,29 @@ bpy.context.object.name = "diffuser.groove_negative.001"
 bpy.ops.object.duplicate()
 bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
 
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, -frame_height/2 - 0.4, (2*frame_thickness+acrylic_thickness)/2-acrylic_tolerance), scale=(frame_length + 5*frame_thickness*tan(pi/5), frame_height, 2*frame_thickness+acrylic_thickness))
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+bpy.ops.transform.translate(value=(0, led_acrylic_gap/2, -led_acrylic_gap*tan(dihedral_angle_dodecahedron/2)/2+frame_thickness/(tan(dihedral_angle_dodecahedron/2))))
+bpy.ops.transform.rotate(value=pi/2-dihedral_angle_dodecahedron/2, orient_axis='X')
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.context.object.name = "diffuser.groove_negative.003"
+bpy.ops.object.duplicate()
+bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
 
-bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, -3.2), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), led_strip_width , 1))
+
+
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, -2), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), led_acrylic_gap-.8 , 3))
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+bpy.context.object.name = "diffuser.middle_negative"
+
+bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, -2.3), scale=(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10))), led_strip_width , 3))
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 bpy.context.object.name = "diffuser"
+
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.middle_negative"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.groove_negative.001"]
@@ -564,6 +582,14 @@ bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.groove_negative.002"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.groove_negative.003"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["diffuser.groove_negative.004"]
 bpy.ops.object.modifier_apply(modifier="Boolean")
 
 bpy.ops.object.modifier_add(type='BOOLEAN')
@@ -680,6 +706,25 @@ bpy.data.objects['frame.outside.wire_channel'].select_set(True)
 bpy.data.objects['frame.outside.endcap'].select_set(True)
 bpy.data.objects['frame.outside.endcap.001'].select_set(True)
 bpy.ops.object.delete(use_global=False)
+
+
+
+#############
+# Wire Holes
+#############
+
+bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=7.5, depth=50, enter_editmode=False, align='WORLD', location=(0.5*(2*tan(0.3648610801294146)*(frame_outer_bottom_thickness + led_strip_height)+LED_length*(LED_length/(2*tan(2*pi/10)) + XXX)/(LED_length/(2*tan(2*pi/10)))), 0, frame_outer_bottom_thickness + led_strip_height), scale=(1, 1, 1))
+bpy.ops.transform.rotate(value=-0.3648610801294146, orient_axis='Y', orient_type='GLOBAL', orient_matrix=((1, -0, -0), (-0, -1.34359e-07, 1), (-0, -1, -1.34359e-07)), orient_matrix_type='VIEW', mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, snap=False, snap_elements={'INCREMENT'}, use_snap_project=False, snap_target='CLOSEST', use_snap_self=False, use_snap_edit=True, use_snap_nonedit=True, use_snap_selectable=False)
+bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+bpy.context.object.name = "frame.outside.wire_hole.001"
+
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.context.view_layer.objects.active = bpy.data.objects['frame.outside']
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["frame.outside.wire_hole.001"]
+bpy.ops.object.modifier_apply(modifier="Boolean")
 
 
 
